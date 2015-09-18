@@ -12,7 +12,7 @@ class MyWindow(QtGui.QWidget):
         self.vbox.addWidget(self.label)
         self.vbox.addWidget(self.btnQuit)
         self.setLayout(self.vbox)
-        self.connect (self. btnQuit, QtCore.SIGNAL( "clicked()") ,
+        self.connect (self.btnQuit, QtCore.SIGNAL( "clicked()") ,
                       QtGui.qApp.quit)
 
 if __name__ == "__main__":
