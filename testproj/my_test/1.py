@@ -3,7 +3,7 @@ from PyQt4 import QtCore, QtGui
 import sys
 import login_form
 import login
-import main_window
+import untitled as main_window
 import main
 from Queue import Queue
 
@@ -38,13 +38,8 @@ if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
     window = MainClass()
-    # desktop setup
-    #desktop = QtGui.QApplication.desktop()
-    #x = (desktop.width() - window.width()) // 2
-    #y = (desktop.height() - window.height()) // 2
-    #window.move(x, y)
-    # desktop setup
     window.fw.show()
+    window.fw.center()
     window.main.connect(window.fw, QtCore.SIGNAL("logined()"), window.main.show)
     # Отображаем окно
     sys.exit(app.exec_()) #Запускаем цикл обработки

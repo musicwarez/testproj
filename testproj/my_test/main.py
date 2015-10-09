@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui, QtSql
-import sys, main_window
+import sys
+#import main_window
+import untitled
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -8,7 +10,7 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self.db = None
-        self.ui = main_window.Ui_MainWindow()
+        self.ui = untitled.Ui_MainWindow()
         self.ui.setupUi(self)
 
 

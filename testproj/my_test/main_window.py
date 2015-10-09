@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Oct  7 14:36:38 2015
+# Created: Fri Oct  9 10:12:08 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,15 +43,15 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.actionLogout = QtGui.QAction(MainWindow)
         self.actionLogout.setObjectName(_fromUtf8("actionLogout"))
+        self.actionHelp = QtGui.QAction(MainWindow)
+        self.actionHelp.setMenuRole(QtGui.QAction.AboutRole)
+        self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
         self.actionExit = QtGui.QAction(MainWindow)
         self.actionExit.setObjectName(_fromUtf8("actionExit"))
-        self.actionHelp = QtGui.QAction(MainWindow)
-        self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
-        self.actionExit_2 = QtGui.QAction(MainWindow)
-        self.actionExit_2.setObjectName(_fromUtf8("actionExit_2"))
+        self.actionExit.triggered.connect(self.close)
         self.menuFile.addAction(self.actionLogout)
         self.menuFile.addSeparator()
-        self.menuFile.addAction(self.actionExit_2)
+        self.menuFile.addAction(self.actionExit)
         self.menuAbout.addAction(self.actionHelp)
         self.menuAbout.addSeparator()
         self.menubar.addAction(self.menuFile.menuAction())
@@ -62,10 +62,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "My Ptoga", None))
-        self.menuFile.setTitle(_translate("MainWindow", "File", None))
+        self.menuFile.setTitle(_translate("MainWindow", "&File", None))
         self.menuAbout.setTitle(_translate("MainWindow", "About", None))
         self.actionLogout.setText(_translate("MainWindow", "Logout", None))
         self.actionExit.setText(_translate("MainWindow", "Exit", None))
         self.actionHelp.setText(_translate("MainWindow", "Help", None))
-        self.actionExit_2.setText(_translate("MainWindow", "Exit", None))
 
