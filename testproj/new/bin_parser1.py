@@ -10,8 +10,8 @@ protocol = {
     "43": {"name": "Order Executed With Price/Sized", 'len': 39, 'bin': "<BBIQIIQBQ"},
     "50": {"name": "Trade", 'len': 33,'bin': "<BBIIIBBQQB"},
     "51": {"name": "Auction Trade", 'len': 33,'bin': "<BBIIIBBQQB"},
-    "78": {"name": "Off-Book Trade", 'len': 70, 'bin': ""},
-    "42": {"name": "Trade Break", 'len': 19, 'bin': ""},
+    "78": {"name": "Off-Book Trade", 'len': 70, 'bin': "<BBIIIBBQQ4sQQ4sQ5sB"},
+    "42": {"name": "Trade Break", 'len': 19, 'bin': "<BBIQBI"},
     "49": {"name": "Auction Info", 'len': 30, 'bin': ""},
     "77": {"name": "Statistics", 'len': 23, 'bin': ""},
     "01": {"name": "Login Request", 'len': 18, 'bin': ""},
@@ -32,7 +32,18 @@ protocol = {
     "52": {"name": "Symbol Directory", 'len': 65, 'bin': "" },
 }
 # Here Messages type witch we should check
-need = ("54", "45", "43", "50", "51")
+need = ("45", "50", "51", "78")
+look = ['10444957', '7528158', '10439722', '10444976', '10444975', '10438800', '10444958',
+ '9957331', '10445098', '10445299', '7440239', '10445151', '10444925', '10445295',
+ '10445294', '10445297', '10445149', '8163507', '10438909', '10445100', '10445103',
+ '10445102', '10445866', '9267735', '10445162', '10445161', '10439914', '10438799',
+ '10439823', '10441119', '10438910', '8652045', '10439424', '10444965', '10444966',
+ '10439718', '10444960', '10444961', '10439915', '10439416', '10439822', '10446537',
+ '3452601', '10444915', '10444980', '1278043', '10444078', '10444079', '3462787',
+ '9356961', '9356735']
+
+look1 = ['2778', '2735', '2769', '2737', '2781', '2731', '2733', '2763', '2772', '2760', '2766',
+         '2729', '2775', '2741', '2752', '2744', '2750', '2746', '2739', '2748']
 
 class filehandle(object):
     def __init__(self, filename):
@@ -54,22 +65,24 @@ class filehandle(object):
             le = protocol[m_type]['len']
             bin = protocol[m_type]['bin']
             real_len = len(payload_str)
-            #if self.sequence == 10444078:
+            #if self.sequence == 2748:
             #    print m_type
             #    exit()
 
             #first positioh has message type payload_str[0:1]
             if m_type in need:
                 label = True
-                try:
-                    tmp = struct.unpack(bin, payload_str[0:le])
-                except struct.error as e:
-                    print >>sys.stderr, "Error. unpack payload"
+                #try:
+                tmp = struct.unpack(bin, payload_str[0:le])
+                #except struct.error as e:
+                #    print >>sys.stderr, "Error. unpack payload"
                 # + message type [1]
                 self.data_str = self.data_str + ":" +str(m_type)
-                #if self.sequence == 10444078:
+                ################################
+                #if str(self.sequence) in look1:
                 #    print tmp
-                #    exit()
+                #    #exit()
+                ################################
                 if m_type == "54":
                     #Time!!! convert from sec to msec
                     self.rtmc = tmp[2] * 1000000
@@ -88,6 +101,25 @@ class filehandle(object):
                 if m_type == "51":
                     #0x51 Auction Trade (Trade ID  position 8)
                     self.data_str = self.data_str + ":" + str(tmp[8]) + ":" + exch_time
+                if m_type == "78":
+                    ###############################
+                    #if str(self.sequence) in look:
+                    #    print tmp
+                        #exit()
+                    #if str(tmp[14]) in ("XOFF "):
+                    #    print tmp
+                    ###############################
+                    if str(tmp[14]) not in ("XLON "):
+                        #print tmp
+                        #print "OKZ"
+                        #exit()
+                #if m_type == "78":
+                    #0x51 Auction Trade (Trade ID [8] Trade type [9] )
+                        self.data_str = self.data_str + ":" + str(tmp[8]) + ":" + exch_time + ":" +str(tmp[9]) + ":"\
+                                                                                                       +str(tmp[14])
+                    else:
+                        #print str(tmp[14])
+                        label = False
                 #delete used message
                 payload_str = payload_str[le:real_len]
                 if len(payload_str) == le or len(payload_str) == 0:
@@ -98,6 +130,7 @@ class filehandle(object):
                     payload_str = False
         if label:
             print(self.data_str)
+            pass
 
     def data_type(self, payload, mc):
         #needs only
@@ -110,9 +143,9 @@ class filehandle(object):
 
     def read_log(self):
         #Read RAW data from file
-        #self.data = open(self.filename, "rb")
+        self.data = open(self.filename, "rb")
         #Read RAW data from stdin
-        self.data = sys.stdin
+        #self.data = sys.stdin
         while True:
             char = self.data.read(1)
             if not char:
@@ -144,9 +177,9 @@ class filehandle(object):
             #Market Data Group var1[2]
             #Sequence Number var1[3]
             self.sequence = var1[3]
-            if var1[3] == 10444078:
-                print var0
-                print var1
+            #if var1[3] == 10444078:
+            #    print var0
+            #    print var1
             rtmc = str(var0[1] * 1000000 +  var0[2])
             y = datetime.date(datetime.fromtimestamp(var0[3]))
             y = y.timetuple()
@@ -161,8 +194,8 @@ class filehandle(object):
                         pass
                     n = var1[0] - 8
                     payload = self.data.read(n)
-                    if var1[3] == 10444078:
-                        print payload
+                    #if var1[3] == 10444078:
+                    #    print payload
                     self.data_type(payload, var1[1])
 
 
